@@ -18,6 +18,12 @@ public class UseDeltaTimeManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _useDeltaTime = !_useDeltaTime;
+        }
+        
         s_useDeltaTime = _useDeltaTime;
+        
     }
 }
