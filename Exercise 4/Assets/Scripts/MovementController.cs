@@ -52,4 +52,9 @@ public class MovementController : MonoBehaviour
 
         transform.position = _position;
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(transform.position, transform.position + _direction);
+    }
 }
