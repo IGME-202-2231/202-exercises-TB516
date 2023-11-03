@@ -9,41 +9,20 @@ public class PhysicsObject : MonoBehaviour
     Vector3 _position;
     Vector3 _velocity;
     Vector3 _direction;
-    Vector3 _acceleration;
 
+    [SerializeField] Vector3 _acceleration;
     [SerializeField] float _mass = 1;
     [SerializeField] float _maxSpeed = 10;
     [SerializeField] bool _useFriction;
     [SerializeField] bool _useGravity;
 
-    Vector2 ScreenMax
-    {
-        get
-        {
-            return new(
-                Camera.main.transform.position.x + Camera.main.orthographicSize * Camera.main.aspect,
-                Camera.main.transform.position.y + Camera.main.orthographicSize
-                );
-        }
-    }
-    Vector2 ScreenMin
-    {
-        get
-        {
-            return new(
-                Camera.main.transform.position.x - Camera.main.orthographicSize * Camera.main.aspect,
-                Camera.main.transform.position.y - Camera.main.orthographicSize
-                );
-        }
-    }
-
-    void Start()
-    {
-        _position = transform.position;
-    }
+    public float MaxSpeed => _maxSpeed;
+    public Vector3 Velocity => _velocity;
 
     void Update()
     {
+        _position = transform.position;
+
         if (_useGravity) ApplyGravity();
         if (_useFriction) ApplyFriction();
 
@@ -80,26 +59,26 @@ public class PhysicsObject : MonoBehaviour
 
     private void Bounce()
     {
-        if (_position.x <= ScreenMin.x)
+        if (_position.x <= CollisionManager.ScreenMin.x)
         {
             _velocity.x *= -1;
-            _position.x = ScreenMin.x;
+            _position.x = CollisionManager.ScreenMin.x;
         }
-        else if (_position.x >= ScreenMax.x)
+        else if (_position.x >= CollisionManager.ScreenMax.x)
         {
             _velocity.x *= -1;
-            _position.x = ScreenMax.x;
+            _position.x = CollisionManager.ScreenMax.x;
         }
 
-        if (_position.y <= ScreenMin.y)
+        if (_position.y <= CollisionManager.ScreenMin.y)
         {
             _velocity.y *= -1;
-            _position.y = ScreenMin.y;
+            _position.y = CollisionManager.ScreenMin.y;
         }
-        else if (_position.y >= ScreenMax.y)
+        else if (_position.y >= CollisionManager.ScreenMax.y)
         {
             _velocity.y *= -1;
-            _position.y = ScreenMax.y;
+            _position.y = CollisionManager.ScreenMax.y;
         }
     }
 
