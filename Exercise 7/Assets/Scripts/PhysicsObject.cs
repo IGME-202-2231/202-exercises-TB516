@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class PhysicsObject : MonoBehaviour
@@ -8,13 +7,13 @@ public class PhysicsObject : MonoBehaviour
 
     Vector3 _position;
     Vector3 _velocity;
-    Vector3 _direction;
 
     [SerializeField] Vector3 _acceleration;
     [SerializeField] float _mass = 1;
     [SerializeField] float _maxSpeed = 10;
     [SerializeField] bool _useFriction;
     [SerializeField] bool _useGravity;
+    [SerializeField] bool _bounces = true;
 
     public float MaxSpeed => _maxSpeed;
     public Vector3 Velocity => _velocity;
@@ -31,9 +30,7 @@ public class PhysicsObject : MonoBehaviour
 
         _position += _velocity * Time.deltaTime;
 
-        Bounce();
-
-        _direction = _velocity.normalized;
+        if (_bounces) Bounce();
 
         transform.position = _position;
 
