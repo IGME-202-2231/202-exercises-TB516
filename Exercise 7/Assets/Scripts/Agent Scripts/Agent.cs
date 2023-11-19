@@ -4,13 +4,15 @@ public abstract class Agent : MonoBehaviour
 {
     [SerializeField] protected PhysicsObject _physicsObject;
     [SerializeField] float _maxForce = 10;
+    [SerializeField] protected AgentManager _agentManager;
+    [SerializeField] protected SpriteRenderer _renderer;
 
     protected float _wanderAngle = 0;
     [SerializeField] float _perlinOffset = 100;
 
     protected Vector3 _totalForce;
 
-    private void Start()
+    protected void Start()
     {
         _wanderAngle = Random.Range(0,360);
     }
@@ -62,6 +64,26 @@ public abstract class Agent : MonoBehaviour
         _wanderAngle += (0.5f - Mathf.PerlinNoise(transform.position.x * 0.1f + _perlinOffset, transform.position.y * .1f + _perlinOffset)) * Mathf.PI * Time.deltaTime;
 
         return Seek(new Vector3(futurePos.x + Mathf.Cos(_wanderAngle) * wanderRadius, futurePos.y + Mathf.Sin(_wanderAngle) * wanderRadius), weight);
+    }
+
+    protected Agent FindClosest()
+    {
+        float minDist = float.MaxValue;
+        Agent closest = this;
+
+        for (int i = 0; i < _agentManager.Agents.Count; i++)
+        {
+            if (_agentManager.Agents[i] == this) continue;
+
+            float dist = Vector2.Distance(transform.position, _agentManager.Agents[i].transform.position);
+
+            if (dist < minDist)
+            {
+                minDist = dist;
+                closest = _agentManager.Agents[i];
+            }            
+        }
+        return closest;
     }
 
     protected Vector3 StayInBounds(float secInAdvance = 1, float weight = 1)

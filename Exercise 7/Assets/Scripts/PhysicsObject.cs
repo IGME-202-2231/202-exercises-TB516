@@ -83,4 +83,10 @@ public class PhysicsObject : MonoBehaviour
     {
         _acceleration += force / _mass;
     }
+
+    public void StopMoving()
+    {
+        _acceleration = Vector3.zero;
+        _velocity = Vector3.zero;
+    }
 }
