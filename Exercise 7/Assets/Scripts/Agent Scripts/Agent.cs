@@ -4,13 +4,22 @@ public abstract class Agent : MonoBehaviour
 {
     [SerializeField] protected PhysicsObject _physicsObject;
     [SerializeField] float _maxForce = 10;
-    [SerializeField] protected AgentManager _agentManager;
     [SerializeField] protected SpriteRenderer _renderer;
-
-    protected float _wanderAngle = 0;
     [SerializeField] float _perlinOffset = 100;
 
+    protected float _wanderAngle = 0;
+    
+    protected AgentManager _agentManager;
     protected Vector3 _totalForce;
+
+    public AgentManager Manager
+    {
+        get => _agentManager;
+        set
+        {
+            _agentManager = value;
+        }
+    }
 
     protected void Start()
     {
@@ -64,6 +73,33 @@ public abstract class Agent : MonoBehaviour
         _wanderAngle += (0.5f - Mathf.PerlinNoise(transform.position.x * 0.1f + _perlinOffset, transform.position.y * .1f + _perlinOffset)) * Mathf.PI * Time.deltaTime;
 
         return Seek(new Vector3(futurePos.x + Mathf.Cos(_wanderAngle) * wanderRadius, futurePos.y + Mathf.Sin(_wanderAngle) * wanderRadius), weight);
+    }
+
+    protected Vector3 Seperate(float weight = 1)
+    {
+        Vector3 seperationForce = Vector3.zero;
+
+        for (int i = 0; i < _agentManager.Agents.Count; i++)
+        {
+            if (_agentManager.Agents[i] == this) continue;
+
+            float distance = Vector2.Distance(transform.position, _agentManager.Agents[i].gameObject.transform.position);
+            distance += 0.000000001f;
+
+            seperationForce += (1 / distance) * Flee(_agentManager.Agents[i].gameObject);
+        }
+
+        return weight * seperationForce;
+    }
+
+    protected Vector3 Cohesion(float weight = 1)
+    {
+        return weight * Seek(FlockManager.Instance.Center);
+    }
+
+    protected Vector3 Alignment(float weight = 1)
+    {
+        return (FlockManager.Instance.Direction * _physicsObject.MaxSpeed) - _physicsObject.Velocity;
     }
 
     protected Agent FindClosest()

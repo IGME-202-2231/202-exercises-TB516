@@ -5,8 +5,11 @@ public class Wanderer : Agent
     [SerializeField] private float _boundsWeight = 10;
     protected override void CalcSteeringForces()
     {
-        _totalForce += Wander();
-        _totalForce += StayInBounds(1, _boundsWeight);
+        _totalForce += Wander(2, 1.5f);
+        _totalForce += StayInBounds(0, _boundsWeight);
+        _totalForce += Seperate(2.5f);
+        _totalForce += Cohesion(8);
+        _totalForce += Alignment(2f);
     }
     private void OnDrawGizmosSelected()
     {

@@ -4,7 +4,7 @@ using UnityEngine;
 public class AgentManager : MonoBehaviour
 {
     [SerializeField] Agent _agentPrefab;
-    [SerializeField] uint _playerCount;
+    [SerializeField] uint _agentCount;
     [SerializeField] private float _time = 2;
     [SerializeField] Sprite[] _tagSprites;
 
@@ -27,14 +27,19 @@ public class AgentManager : MonoBehaviour
     void Start()
     {
         _agents = new();
-        for (int i = 0; i < _playerCount; i++)
+        for (int i = 0; i < _agentCount; i++)
         {
-            SpawnPlayer();
+            SpawnAgent();
         }
-        (_agents[0] as TagPlayer).SetState(TagStates.Counting);
+
+        /*(_agents[0] as TagPlayer).SetState(TagStates.Counting);*/
     }
-    void SpawnPlayer()
+    void SpawnAgent()
     {
-        _agents.Add(Instantiate(_agentPrefab));
+        Agent agent = Instantiate(_agentPrefab);
+        agent.Manager = this;
+
+        _agents.Add(agent);
+        FlockManager.Instance.AddToFlock(agent);
     }
 }
