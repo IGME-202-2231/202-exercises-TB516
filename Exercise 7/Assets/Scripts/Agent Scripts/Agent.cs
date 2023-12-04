@@ -99,7 +99,7 @@ public abstract class Agent : MonoBehaviour
 
     protected Vector3 Alignment(float weight = 1)
     {
-        return (FlockManager.Instance.Direction * _physicsObject.MaxSpeed) - _physicsObject.Velocity;
+        return weight * (FlockManager.Instance.Direction * _physicsObject.MaxSpeed) - _physicsObject.Velocity;
     }
 
     protected Agent FindClosest()
